@@ -1,0 +1,16 @@
+{
+  "name": "browse-and-search-tests",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --project=api --project=chromium --project=edge",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=chromium --project=edge",
+    "calibrate": "playwright test --project=calibrate",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
