@@ -1,5 +1,5 @@
 import { test as base, expect } from '@playwright/test';
-import { mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 /**
@@ -11,7 +11,7 @@ export class Home {
 
   private fullPath(path: string) {
     return join(this.root, ...path.split('/').filter(Boolean));
-  }
+    }
 
   /** Empties the home directory. Every test starts from nothing. */
   reset() {
@@ -30,6 +30,11 @@ export class Home {
     writeFileSync(this.fullPath(path), Buffer.alloc(bytes, 'x'));
   }
 
+  /** The bytes of a file, so a test can compare it with what the app sent back. */
+    read(path: string) {
+        return readFileSync(this.fullPath(path));
+    }
+
   exists(path: string) {
     try {
       statSync(this.fullPath(path));
@@ -42,7 +47,7 @@ export class Home {
   /** Names inside a folder, straight from the disk. Stronger than asking the app, and shows leftover partial files. */
   names(path: string) {
     return readdirSync(this.fullPath(path)).sort();
-  }
+  }  
 }
 
 export const test = base.extend<{ home: Home }>({
@@ -50,7 +55,7 @@ export const test = base.extend<{ home: Home }>({
     const root = process.env.TEST_HOME;
     if (!root) throw new Error('TEST_HOME is not set. Run the tests through playwright.config.ts.');
     const home = new Home(root);
-    home.reset();
+      home.reset();
     await use(home);
   },
 });
