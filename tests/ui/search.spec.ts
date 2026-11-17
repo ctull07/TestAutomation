@@ -52,18 +52,10 @@ test.describe('UI - Search files and folders (TC-08)', () => {
     await searchBox(page).fill('BO');
 
     await expect(names(page)).toHaveText(['boundary.bin']);
-  });
-
-  test('TC-08f: Searching puts the text in the URL', async ({ page, home }) => {
-    home.file('/Uploads/boundary.bin', 10);
-
-    await page.goto('/browse');
-    await searchBox(page).fill('BO');
-
     await expect(page).toHaveURL(/\/browse\?q=BO$/);
   });
 
-  test('TC-08g: Clearing the search restores the folder', async ({ page, home }) => {
+  test('TC-08f: Clearing the search restores the folder', async ({ page, home }) => {
     home.file('/Documents/Contracts/vendor-agreement.txt', 10);
     home.file('/Documents/Reports/budget-forecast.csv', 10);
 
@@ -77,7 +69,7 @@ test.describe('UI - Search files and folders (TC-08)', () => {
     await expect(page).not.toHaveURL(/q=/);
   });
 
-  test('TC-08h: A % in the search text works and is encoded in the URL', async ({ page, home }) => {
+  test('TC-08g: A % in the search text works and is encoded in the URL', async ({ page, home }) => {
     home.file('/Documents/Reports/99%-done.txt', 10);
 
     await page.goto('/browse');

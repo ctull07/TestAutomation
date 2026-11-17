@@ -9,6 +9,7 @@ import { MAX_UPLOAD_BYTES } from './tests/support/limits';
 const home = (process.env.TEST_HOME ??= mkdtempSync(join(tmpdir(), 'browse-tests-')));
 
 const port = process.env.PORT ?? '5099';
+
 const baseURL = process.env.BASE_URL ?? `http://localhost:${port}`;
 
 // Set BASE_URL to test an app that is already running. Then YOU must start it with the same home folder
@@ -37,7 +38,6 @@ export default defineConfig({
             env: {
                 ASPNETCORE_URLS: baseURL,
                 ASPNETCORE_ENVIRONMENT: 'Development',
-                // ASSUMPTION: the options section in appsettings.json is called "FileBrowser". Check and adjust.
                 FileBrowser__RootPath: home,
                 FileBrowser__MaxUploadBytes: String(MAX_UPLOAD_BYTES),
             },
@@ -47,6 +47,7 @@ export default defineConfig({
         { name: 'api', testDir: './tests/api' },
         { name: 'chromium', testDir: './tests/ui', use: { ...devices['Desktop Chrome'] } },
         { name: 'edge', testDir: './tests/ui', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+        { name: 'noFrame', testDir: './tests/ui/free', use: { ...devices['Desktop Edge'] } },
         { name: 'calibrate', testDir: './tests/calibrate' },
     ],
 });
