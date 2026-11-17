@@ -1,12 +1,15 @@
 import { chromium, type Browser, type Page } from 'playwright';
 import assert from 'node:assert/strict';
+import { deleteTestFile } from './data-clean-up';
 
 const browser: Browser = await chromium.launch({ headless: true });
 const page: Page = await browser.newPage();
+const home = 'http://localhost:5120/browse/';
 
+// Test: A user is restricted to only uploading files and cannot upload folders using the upload button. 
 try {
-    // Navigate to the app
-    await page.goto('http://localhost:5120');
+    
+    await page.goto(home);
 
     // Perform user actions
     const fileChooserPromise = page.waitForEvent('filechooser');
@@ -32,5 +35,6 @@ catch (error: any) {
     process.exitCode = 1;
 }
 finally {
+    await deleteTestFile(page, `${ home }Documents`, 'sample.txt');
     await browser.close();
 }
