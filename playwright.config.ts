@@ -18,6 +18,7 @@ const startApp = !process.env.BASE_URL;
 
 export default defineConfig({
     testDir: './tests',
+    testMatch: '**/*.spec.ts',
     // One worker, because every test shares the one home directory and starts by emptying it.
     workers: 1,
     fullyParallel: false,
