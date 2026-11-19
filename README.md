@@ -17,11 +17,11 @@ Needs Node 18+ and the .NET 8 SDK.
 
 ## Run
 ```
-npm test								# API tests, then UI tests in Chromium and Edge
-npm run test:api						# API tests only (fast)
-npm run test:ui							# UI tests only
-npm run report							# open the HTML report of the last run
-npx tsx --test "tests/free/*.test.ts"   # Node tests only
+npm test				# API tests, then UI tests in Chromium and Edge
+npm run test:api			# API tests only (fast)
+npm run test:ui				# UI tests only
+npm run report				# open the HTML report of the last run
+npx tsx --test "tests/free/*.test.ts"	# Node tests only
 ```
 The config starts the app itself, on port 5099, with a temporary home directory and `MaxUploadBytes = 1300`,
 and stops it afterwards. Each test starts by emptying that directory, then creates exactly the files it needs.
@@ -41,11 +41,11 @@ If TC-05a fails with a different status, or TC-05b gets 200, the number is wrong
 
 ## Layout
 ```
-playwright.config.ts					starts the app, defines the api / chromium / edge projects
-tests/support/fixtures.ts				the `home` fixture: reset(), folder(), file(), names(), exists()
-tests/support/limits.ts					MAX_UPLOAD_BYTES and LARGEST_ACCEPTED_FILE
-tests/api/								TC-01, TC-02, TC-03, TC-05, TC-10, TC-12
-tests/ui/								TC-04, TC-06, TC-07, TC-08, TC-09, TC-11 
+playwright.config.ts			starts the app, defines the api / chromium / edge projects
+tests/support/fixtures.ts		the `home` fixture: reset(), folder(), file(), names(), exists()
+tests/support/limits.ts			MAX_UPLOAD_BYTES and LARGEST_ACCEPTED_FILE
+tests/api/				TC-01, TC-02, TC-03, TC-05, TC-10, TC-12
+tests/ui/				TC-04, TC-06, TC-07, TC-08, TC-09, TC-11 
 npx tsx --test "tests/free/*.test.ts"	Node test suite
-tests/calibrate/						the bisection helper (not part of npm test)
+tests/calibrate/			the bisection helper (not part of npm test)
 ```
