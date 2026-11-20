@@ -10,7 +10,7 @@ function upload(request: APIRequestContext, folder: string, name: string, bytes 
 }
 
 test.describe('API - file and folder names (TC-10)', () => {
-    test('TC-10a a name that is already taken gets a number', async ({ request, home }) => {
+    test('TC-10a: A name that is already taken gets a number', async ({ request, home }) => {
         home.file('/Uploads/a.txt', 5); // the original, 5 bytes
 
         const res = await upload(request, '/Uploads', 'a.txt', 10); // the new one, 10 bytes
@@ -21,7 +21,7 @@ test.describe('API - file and folder names (TC-10)', () => {
         expect(home.read('/Uploads/a.txt').length).toBe(5); // the original is untouched
     });
 
-    test('TC-10b a file named like an existing folder gets a number', async ({ request, home }) => {
+    test('TC-10b: A file named like an existing folder gets a number', async ({ request, home }) => {
         home.folder('/Documents');
 
         const res = await upload(request, '/', 'Documents'); // no extension, so the name matches the folder exactly
@@ -31,7 +31,7 @@ test.describe('API - file and folder names (TC-10)', () => {
         expect(home.names('/')).toEqual(['Documents', 'Documents (1)']); // the folder is still there
     });
 
-    test('TC-10c a reserved name is rejected', async ({ request, home }) => {
+    test('TC-10d: A reserved name is rejected', async ({ request, home }) => {
         home.folder('/Uploads');
 
         const res = await upload(request, '/Uploads', 'CON.txt'); // CON is a device name on Windows
@@ -41,7 +41,7 @@ test.describe('API - file and folder names (TC-10)', () => {
         expect(home.names('/Uploads')).toEqual([]); // nothing was created
     });
 
-    test('TC-10d a name with special characters is kept as it is', async ({ request, home }) => {
+    test('TC-10f: A name with special characters is kept as it is', async ({ request, home }) => {
         home.folder('/Uploads');
 
         const res = await upload(request, '/Uploads', 'test&test.txt');
