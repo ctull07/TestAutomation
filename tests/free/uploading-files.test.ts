@@ -40,25 +40,9 @@ after(async () => {
 
         console.log('PASS: Successfully uploaded files with the same name in different directories');
     });
+    
 
-
-    test('TC-10f: API rejects file names with forbidden characters', async () => {
-        // Building a multipart/form-data payload with an invalid file name
-        const formData = new FormData();
-        const fakeFile = new Blob(['test content'], { type: 'text/plain' });
-        formData.append('file', fakeFile, 'invalid:name.txt');
-
-        // Send a POST request directly to your upload API endpoint
-        const response = await fetch('https://localhost:7146/api/files/upload', {
-            method: 'POST',
-            body: formData,
-        });
-
-        assert.equal(response.status, 400);
-        assert.equal((await response.json()).title, 'Invalid file name');
-    });
-
-    test('API rejects file names with 255 characters', async () => {
+    test('TC-10e: API rejects file names with 255 characters', async () => {
         const formData = new FormData();
         const fakeFile = new Blob(['test content'], { type: 'text/plain' });
         formData.append('file', fakeFile, 'a'.repeat(256) + '.txt');
@@ -67,6 +51,23 @@ after(async () => {
             method: 'POST',
             body: formData,
         });
+        assert.equal(response.status, 400);
+        assert.equal((await response.json()).title, 'Invalid file name');
+    });
+
+
+    test('TC-10f: API rejects file names with forbidden characters', async () => {
+        // Building a multipart/form-data payload with an invalid file name
+        const formData = new FormData();
+        const fakeFile = new Blob(['test content'], { type: 'text/plain' });
+        formData.append('file', fakeFile, 'invalid:name.txt');
+
+        // Send a POST request directly to the upload API endpoint
+        const response = await fetch('https://localhost:7146/api/files/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
         assert.equal(response.status, 400);
         assert.equal((await response.json()).title, 'Invalid file name');
     });
