@@ -4,7 +4,7 @@ import { test, expect } from '../support/fixtures';
 const breadcrumb = (page: Page) => page.getByRole('navigation', { name: 'Breadcrumb' });
 
 test.describe('UI - browsing (TC-09)', () => {
-    test('TC-09a clicking a folder opens it', async ({ page, home }) => {
+    test('TC-09a: Clicking a folder opens it', async ({ page, home }) => {
         home.folder('/Documents/Reports');
 
         await page.goto('/browse');
@@ -14,7 +14,7 @@ test.describe('UI - browsing (TC-09)', () => {
         await expect(breadcrumb(page)).toHaveText(/^Home\s*\/\s*Documents$/);
     });
 
-    test('TC-09b clicking a breadcrumb goes back up', async ({ page, home }) => {
+    test('TC-09b: Clicking a breadcrumb goes back up', async ({ page, home }) => {
         home.file('/Documents/Reports/q1.txt', 10);
 
         await page.goto('/browse/Documents/Reports');
@@ -24,7 +24,7 @@ test.describe('UI - browsing (TC-09)', () => {
         await expect(breadcrumb(page)).toHaveText(/^Home$/);
     });
 
-    test("TC-09c the browser's back button returns to the previous folder", async ({ page, home }) => {
+    test("TC-09c: The browser's back button returns to the previous folder", async ({ page, home }) => {
         home.folder('/Documents/Reports');
 
         // Click through the app, so the browser's history has entries to go back to
@@ -39,7 +39,7 @@ test.describe('UI - browsing (TC-09)', () => {
         await expect(breadcrumb(page)).toHaveText(/^Home\s*\/\s*Documents$/);
     });
 
-    test("TC-09d the browser's forward button returns to the next folder", async ({ page, home }) => {
+    test("TC-09d: The browser's forward button returns to the next folder", async ({ page, home }) => {
         home.folder('/Documents/Reports');
 
         await page.goto('/browse');
@@ -66,7 +66,7 @@ test.describe('UI - browsing (TC-09)', () => {
         await expect(breadcrumb(page)).toHaveText(/^Home\s*\/\s*Documents\s*\/\s*Reports$/);
     });
 
-    test('TC-09f an empty folder says so', async ({ page, home }) => {
+    test('TC-09f: An empty folder says so', async ({ page, home }) => {
         home.folder('/Empty');
 
         await page.goto('/browse/Empty');
