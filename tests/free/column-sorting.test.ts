@@ -16,9 +16,9 @@ after(async () => {
 });
 
 
-await test('TC-13a: Names sort by ascending order by default and descending when clicked', async () => {
+await test('TC-13: Names sort by ascending order by default and descending when clicked', async () => {
 
-    await page.goto(`${home}Documents`);
+    await page.goto(`${home}`);
 
     const nameHeader = page.getByRole('button', { name: 'NAME' });
     const nameCells = page.locator('tbody tr td:nth-child(1)');
