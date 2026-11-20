@@ -48,7 +48,6 @@ export default defineConfig({
         { name: 'api', testDir: './tests/api' },
         { name: 'chromium', testDir: './tests/ui', use: { ...devices['Desktop Chrome'] } },
         { name: 'edge', testDir: './tests/ui', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
-        { name: 'noFrame', testDir: './tests/ui/free', use: { ...devices['Desktop Edge'] } },
         { name: 'calibrate', testDir: './tests/calibrate' },
     ],
 });
