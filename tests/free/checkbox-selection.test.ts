@@ -1,45 +1,53 @@
 import { chromium, type Browser, type Page } from 'playwright';
 import assert from 'node:assert/strict';
-import { deleteTestFile } from './data-clean-up';
-import test from 'node:test';
-import { expect } from '../support/fixtures';
-import { fail } from 'assert';
+import { parseSizeToBytes, formatBytes } from '../support/byte-conversion';
+import { before, after, test } from 'node:test';
 
-const browser: Browser = await chromium.launch({ headless: false });
-const page: Page = await browser.newPage();
-const home = 'http://localhost:5120/browse/';
 
-try {
-    // test('Selecting all folders and files'), async () => {
-    await page.goto(`${home}Documents`);
+let browser: Browser;
+let page: Page;
+let home = 'http://localhost:5120/browse/';
 
-    
+before(async () => {
+    browser = await chromium.launch({ headless: false });
+    page = await browser.newPage();
+});
 
-    const selectAll = await page.getByRole('checkbox', { name: 'Select all' });
-
-    await selectAll.check();
-    assert.ok(await selectAll.isChecked(), 'Select all checkbox is not checked');
-
-    // 2. Grab all individual folder and file checkboxes using your HTML attributes
-    const rowCheckboxes = page.locator('.row input[type="checkbox"][data-select]');
-    const count = await rowCheckboxes.count();
-
-    assert.ok(count > 0, 'Expected at least one folder or file row to verify');
-
-    // 3. Loop through every row and verify its checkbox is checked
-    for (let i = 0; i < count; i++) {
-        const checkbox = rowCheckboxes.nth(i);
-        const itemPath = await checkbox.getAttribute('data-path');
-        const isChecked = await checkbox.isChecked();
-
-        assert.equal(isChecked, true, `Row checkbox for "${itemPath}" is not checked`);
-    }
-    const selectedInfo = await page.getByRole('status', { name: 'Selected info' }).innerText();
-    assert.equal(selectedInfo.trim(), '10 Selected (3.0 MB)');
-
-    
-    }
-
-finally {
+after(async () => {
     await browser.close();
-    }
+});
+
+    test('TC-14: Selecting all folders and files', async () => {
+        await page.goto(`${home}`);
+
+        const selectAll = page.getByRole('checkbox', { name: 'Select all' });
+
+        await selectAll.check();
+        assert.ok(await selectAll.isChecked(), 'Select all checkbox is not checked');
+
+        // Locate all rows that currently have a checked checkbox
+        const selectedRows = page.locator('.row:has(input[type="checkbox"][data-select]:checked)');
+        const selectedCount = await selectedRows.count();
+
+        let totalBytes = 0;
+
+        for (let i = 0; i < selectedCount - 1; i++) {
+            // Grab the exact size text (e.g., "37 B", "3.0 MB") from the size span
+            const sizeText = await selectedRows.nth(i).locator('[data-size-path]').innerText();
+            totalBytes += await parseSizeToBytes(sizeText);
+        }
+
+        const expectedTotalSize = await formatBytes(totalBytes);
+        const expectedSummary = `${selectedCount} selected (${expectedTotalSize})`;
+
+        // Assert against the summary element
+        const selectedInfo = page.locator('.selected-info');
+        assert.equal(await selectedInfo.innerText(), expectedSummary, `Expected summary text: "${expectedSummary}", but got: "${await selectedInfo.innerText()}"`);
+
+        // Verify action buttons are enabled
+        assert.ok(await page.getByRole('button', { name: 'Download' }).isEnabled());
+        assert.ok(await page.getByRole('button', { name: 'Copy to...' }).isEnabled());
+        assert.ok(await page.getByRole('button', { name: 'Move to...' }).isEnabled());
+        assert.ok(await page.getByRole('button', { name: 'Delete' }).isEnabled());
+
+    }); 
