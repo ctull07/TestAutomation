@@ -7,7 +7,7 @@ let page: Page;
 let home = 'http://localhost:5120/browse/';
 
 before(async () => {
-    browser = await chromium.launch({ headless: false });
+    browser = await chromium.launch({ headless: true });
     page = await browser.newPage();
 });
 
