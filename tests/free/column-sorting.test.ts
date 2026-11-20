@@ -23,14 +23,13 @@ await test('TC-13: Names sort by ascending order by default and descending when 
     const nameHeader = page.getByRole('button', { name: 'NAME' });
     const nameCells = page.locator('tbody tr td:nth-child(1)');
 
-    //await nameHeader.click();
     const actualAsc = (await nameCells.allInnerTexts()).map((text) => text.trim());
     const expectedAsc = [...actualAsc].sort((a, b) => a.localeCompare(b));
 
-
     assert.deepEqual(actualAsc, expectedAsc);
 
-    // 2. Click again -> Verify Descending Order (Z -> A)
+
+    // Verify decending order when the name header is clicked
     await nameHeader.click();
     const actualDesc = (await nameCells.allInnerTexts()).map((text) => text.trim());
     const expectedDesc = [...actualDesc].sort((a, b) => b.localeCompare(a));
