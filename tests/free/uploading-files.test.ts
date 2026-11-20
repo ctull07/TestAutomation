@@ -1,15 +1,26 @@
 import { chromium, type Browser, type Page } from 'playwright';
 import assert from 'node:assert/strict';
-import { deleteTestFile } from './data-clean-up';
-import test from 'node:test';
+import { deleteTestFile } from '../support/data-clean-up';
+import { before, after, test } from 'node:test';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const browser: Browser = await chromium.launch({ headless: false });
-const page: Page = await browser.newPage();
-const home = 'http://localhost:5120/browse/';
+let browser: Browser;
+let page: Page;
+let home = 'http://localhost:5120/browse/';
 
-try {
-    await test('both directories list the same file name', async () => {
+before(async () => {
+    browser = await chromium.launch({ headless: true });
+    page = await browser.newPage();
+});
+
+after(async () => {
+    await deleteTestFile(page, `${home}Photos`, 'sample.txt');
+    await deleteTestFile(page, `${home}Documents`, 'sample.txt');
+
+    await browser.close();
+});
+
+    await test('TC-10c: Both directories list the same file name', async () => {
 
         await page.goto(`${home}Documents`);
 
@@ -31,7 +42,7 @@ try {
     });
 
 
-    test('API rejects file names with forbidden characters', async () => {
+    test('TC-10f: API rejects file names with forbidden characters', async () => {
         // 1. Build a multipart/form-data payload with an invalid file name
         const formData = new FormData();
         const fakeFile = new Blob(['test content'], { type: 'text/plain' });
@@ -59,11 +70,3 @@ try {
         assert.equal(response.status, 400);
         assert.equal((await response.json()).title, 'Invalid file name');
     });
-}
-
-finally {
-    await deleteTestFile(page, `${ home }Photos`, 'sample.txt');
-    await deleteTestFile(page, `${ home }Documents`, 'sample.txt');
-
-    await browser.close();
-}
