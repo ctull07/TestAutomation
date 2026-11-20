@@ -3,13 +3,12 @@ import assert from 'node:assert/strict';
 import { parseSizeToBytes, formatBytes } from '../support/byte-conversion';
 import { before, after, test } from 'node:test';
 
-
 let browser: Browser;
 let page: Page;
 let home = 'http://localhost:5120/browse/';
 
 before(async () => {
-    browser = await chromium.launch({ headless: false });
+    browser = await chromium.launch({ headless: true });
     page = await browser.newPage();
 });
 

@@ -46,6 +46,6 @@ tests/support/fixtures.ts		the `home` fixture: reset(), folder(), file(), names(
 tests/support/limits.ts			MAX_UPLOAD_BYTES and LARGEST_ACCEPTED_FILE
 tests/api/				TC-01, TC-02, TC-03, TC-05, TC-10, TC-12
 tests/ui/				TC-04, TC-06, TC-07, TC-08, TC-09, TC-11 
-npx tsx --test "tests/free/*.test.ts"	Node test suite
+npx tsx --test "tests/free/*.test.ts"	Node test suite: TC:06c, TC-10c, TC-10e, TC-10g, TC-13, TC-14 
 tests/calibrate/			the bisection helper (not part of npm test)
 ```

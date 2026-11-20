@@ -43,12 +43,12 @@ after(async () => {
 
 
     test('TC-10f: API rejects file names with forbidden characters', async () => {
-        // 1. Build a multipart/form-data payload with an invalid file name
+        // Building a multipart/form-data payload with an invalid file name
         const formData = new FormData();
         const fakeFile = new Blob(['test content'], { type: 'text/plain' });
         formData.append('file', fakeFile, 'invalid:name.txt');
 
-        // 2. Send a POST request directly to your upload API endpoint
+        // Send a POST request directly to your upload API endpoint
         const response = await fetch('https://localhost:7146/api/files/upload', {
             method: 'POST',
             body: formData,
